@@ -1,6 +1,5 @@
 SET SERVEROUTPUT ON;
 
--- Create sample table for DML triggers
 CREATE TABLE student (
     student_id NUMBER PRIMARY KEY,
     student_name VARCHAR2(20),
@@ -9,7 +8,6 @@ CREATE TABLE student (
     y_pay NUMBER
 );
 
--- Insert sample data
 INSERT INTO student (student_id, student_name, faculty_id) VALUES (101, 'Ali', 1);
 INSERT INTO student (student_id, student_name, faculty_id) VALUES (102, 'Ahmed', 2);
 INSERT INTO student (student_id, student_name, faculty_id) VALUES (103, 'sana', 1);
@@ -17,7 +15,7 @@ COMMIT;
 
 SELECT * FROM student;
 
--- Before Insert Trigger: Set default faculty_id if null
+--Before Insert Triggr, Set default faculty_id if null
 CREATE OR REPLACE TRIGGER insert_data
 BEFORE INSERT ON student
 FOR EACH ROW
@@ -31,7 +29,7 @@ END;
 INSERT INTO student (student_id, student_name) VALUES (112, 'Kinza');
 SELECT * FROM student;
 
--- Before Update Trigger: Calculate y_pay = h_pay * 1920
+--Before Update Triggr:Calculate y_pay = h_pay *1920
 CREATE OR REPLACE TRIGGER update_salary
 BEFORE UPDATE ON student
 FOR EACH ROW
@@ -43,7 +41,7 @@ END;
 UPDATE student SET h_pay = 250 WHERE student_id = 102;
 SELECT * FROM student;
 
--- Before Delete Trigger: Prevent deletion if student_name = 'sana'
+--Before Delete Trigger:Prevent deletion if student_name ='sana'
 CREATE OR REPLACE TRIGGER prevent_Record
 BEFORE DELETE ON student
 FOR EACH ROW
@@ -54,10 +52,10 @@ BEGIN
 END;
 /
 
--- Test delete (should fail for 'sana')
+-- Test delete 
 DELETE FROM student WHERE student_name = 'sana';
 
--- After Insert Trigger: Log insertions
+-- After Insert Trigger (Log insertions)
 CREATE TABLE student_logs (
     student_id NUMBER,
     student_name VARCHAR2(20),
@@ -77,7 +75,7 @@ END;
 INSERT INTO student (student_id, student_name, faculty_id) VALUES (113, 'Test', 1);
 SELECT * FROM student_logs;
 
--- Combined DML Trigger Example (Insert/Update/Delete)
+-- Combined Example 
 CREATE TABLE superheroes (
     sh_name VARCHAR2(15)
 );
@@ -99,12 +97,10 @@ BEGIN
 END;
 /
 
--- Test combined trigger
 INSERT INTO superheroes VALUES ('Superman');
 UPDATE superheroes SET sh_name = 'Batman' WHERE sh_name = 'Superman';
 DELETE FROM superheroes WHERE sh_name = 'Batman';
 
--- Table Auditing Example
 CREATE TABLE sh_audit (
     new_name VARCHAR2(30),
     old_name VARCHAR2(30),
@@ -134,7 +130,7 @@ BEGIN
 END;
 /
 
--- Test auditing
+
 INSERT INTO superheroes VALUES ('Ironman');
 UPDATE superheroes SET sh_name = 'Spiderman' WHERE sh_name = 'Ironman';
 DELETE FROM superheroes WHERE sh_name = 'Spiderman';
