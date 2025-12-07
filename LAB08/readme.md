@@ -1,1 +1,1 @@
-hi
+As there were no lab tasks i have used the pl2.sql code and have enhanced it after understanding the concepts inside the lab manual and have practiced and compiled it in one code (attached practice code)
