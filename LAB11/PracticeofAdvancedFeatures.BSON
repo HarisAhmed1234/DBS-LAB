@@ -1,0 +1,34 @@
+use LibraryDB
+db.createCollection("books")
+db.books.insertMany([
+  { "title": "The Road", "author": "Cormac McCarthy", "publication_year": 2006, "genre": "Fiction", "rating": 4.5, "ISBN": "123456" },
+  { "title": "1984", "author": "George Orwell", "publication_year": 1949, "genre": "Dystopian", "rating": 4.8, "ISBN": "789012" },
+  { "title": "The Great Gatsby", "author": "F. Scott Fitzgerald", "publication_year": 1925, "genre": "Classic", "rating": 4.2, "ISBN": "345678" },
+  { "title": "The Catcher in the Rye", "author": "J.D. Salinger", "publication_year": 1951, "genre": "Fiction", "rating": 4.0, "ISBN": "901234" },
+  { "title": "To Kill a Mockingbird", "author": "Harper Lee", "publication_year": 1960, "genre": "Classic", "rating": 4.7, "ISBN": "567890" }
+])
+db.books.countDocuments()
+db.books.countDocuments({ "publication_year": { $gt: 2000 } })
+db.books.find().sort({ "publication_year": 1 })
+db.books.find().sort({ "publication_year": -1, "title": 1 })
+db.books.find().limit(5)
+db.books.find().skip(3)
+db.books.find().skip(5).limit(5)
+db.books.aggregate([ { $group: { _id: null, avgPublicationYear: { $avg: "$publication_year" } } } ])
+db.books.aggregate([ { $group: { _id: "$genre", count: { $sum: 1 } } } ])
+db.books.aggregate([ { $group: { _id: "$genre", count: { $sum: 1 } } }, { $sort: { count: -1 } } } ])
+db.books.find({}, { title: 1, author: 1, _id: 0 })
+db.books.find({}, { ISBN: 0 })
+db.books.createIndex({ title: "text", author: "text" })
+db.books.find({ $text: { $search: "Road" } })
+db.books.find({ title: { $regex: "^The", $options: "i" } })
+db.books.find({ author: { $regex: "Lee$", $options: "i" } })
+db.books.updateMany({}, { $inc: { rating: 1 } })
+db.books.updateOne({ title: "1984" }, { $inc: { publication_year: -5 } })
+db.books.findOneAndUpdate(
+  { title: "The Great Gatsby" },
+  { $set: { genre: "Classic" } },
+  { returnNewDocument: true }
+)
+db.books.findOneAndDelete({ title: "The Catcher in the Rye" })
+db.dropDatabase()
